@@ -31,34 +31,6 @@ def process_feed(feed_source_id: int):
 
 
 @shared_task
-def process_image(product_id: int, image_url: str):
-    try:
-        product = Product.objects.get(id=product_id)
-    except ObjectDoesNotExist:
-        logger.warning(
-            f"Product {product_id} ({product}) not found for image processing"
-        )
-        return
-
-    try:
-        response = requests.get(image_url, timeout=10)
-        response.raise_for_status()
-
-        logger.info(f"Downloading image for product {product.id}")
-        temp_image = tempfile.NamedTemporaryFile(delete=True, dir=tempfile.gettempdir())
-        temp_image.write(response.content)
-        temp_image.flush()
-
-        with transaction.atomic():
-            logger.info(f"Saving image for product {product.id}")
-            product.image.save(f"{product.id}.jpg", temp_image, save=True)
-            logger.info(f"Image saved for product {product.id}")
-
-    except requests.RequestException as e:
-        logger.error(f"Error downloading image for product {product.id}: {e}")
-
-
-@shared_task
 def process_all_feeds():
     logger.info("Starting batch processing of feeds")
     now = timezone.now()
