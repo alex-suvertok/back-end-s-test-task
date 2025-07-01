@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models.functions import MD5
 from django.utils.translation import gettext_lazy as _
 
 from ..base import BaseModel
@@ -69,10 +70,7 @@ class Product(BaseModel):
                 fields=["name"],
                 name="product_name_idx",
             ),
-            models.Index(
-                fields=["description"],
-                name="product_description_idx",
-            ),
+            models.Index(MD5("description"), name="product_description_idx"),
         ]
 
     def __str__(self):

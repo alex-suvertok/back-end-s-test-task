@@ -1,6 +1,8 @@
+version: "3.9"
+
 services:
   db:
-    container_name: webcasexmlparser_db
+    container_name: parser_db
     image: postgres:14-alpine
     volumes:
       - postgres_data:/var/lib/postgresql/data
@@ -11,7 +13,7 @@ services:
       - parser_network
 
   redis:
-    container_name: webcasexmlparser_redis
+    container_name: parser_redis
     image: redis:6-alpine
     volumes:
       - redis_data:/data
@@ -21,8 +23,8 @@ services:
 
   web:
     build: .
-    container_name: webcasexmlparser_web
-    command: gunicorn webcasexmlparser.wsgi:application --bind 0.0.0.0:8000 --workers 3
+    container_name: parser_web
+    command: gunicorn parser.wsgi:application --bind 0.0.0.0:8000 --workers 3
     volumes:
       - .:/app
       - static_volume:/app/static
@@ -32,14 +34,16 @@ services:
     depends_on:
       - db
       - redis
+    ports:
+      - "8000:8000"
     restart: unless-stopped
     networks:
       - parser_network
 
   celery_worker:
-    container_name: webcasexmlparser_celery_worker
+    container_name: parser_celery_worker
     build: .
-    command: celery -A webcasexmlparser worker --l info -B
+    command: celery -A parser worker --loglevel=info -B
     volumes:
       - .:/app
       - static_volume:/app/static
@@ -62,4 +66,3 @@ volumes:
 networks:
   parser_network:
     driver: bridge
-    name: parser_network

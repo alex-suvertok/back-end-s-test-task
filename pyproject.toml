@@ -6,7 +6,7 @@ authors = []
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.13"
+python = ">=3.12,<3.14"
 Django = "^5.2.3"
 django-model-utils = "^5.0.0"
 django-modeltranslation = "^0.19.12"
@@ -32,6 +32,8 @@ gunicorn = "^23.0.0"
 django-celery-beat = "^2.7.0"
 pytz = "^2025.1"
 model-bakery = "^1.20.5"
+dj-database-url = "^2.1.0"
+charset_normalizer = "^3.4.2"
 
 [tool.pytest.ini_options]
 DJANGO_SETTINGS_MODULE = "parser.settings"
