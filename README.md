@@ -22,7 +22,7 @@
 1. **Клонувати репозиторій:**
 
 ```bash
-git clone <your-repo>
+git clone git@github.com:alex-suvertok/back-end-s-test-task.git
 cd back-end-s-test-task
 ```
 
